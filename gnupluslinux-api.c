@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 #include "web-scraping/scraping.h"
 
@@ -26,19 +25,19 @@
 
 #define CURL_CMD "curl --output source.png "
 
-int count_str_lines(char *str) {
+int lines(char *str) {
   	if (*str == '\0') return 0;
-	if(*str == '\n') { *str++; return 1 + count_str_lines(str); }
-  	else { *str++; return count_str_lines(str); }
+	if (*str++ == '\n') return 1 + lines(str); 
+	return lines(str); 
 }
 
-int get_img(WSCONF cnfg, char *url, size_t i) {
+uint8_t get_img(WSCONF cnfg, char *url, size_t i) {
   	get_file(url);
 
   	char *srcstr = get_source(cnfg);
   	if (!srcstr) return 1;
 
-  	int sizestr = count_str_lines(srcstr);
+  	int sizestr = lines(srcstr);
   	if (i > sizestr) return 2;
 
   	size_t cnt = 0;
@@ -70,18 +69,18 @@ int main(int argc, char *argv[]) {
 
   	cnfg.string_init = "alt=\"[IMG]\"> <a href=";
   	cnfg.string_end = "\">";
-  	cnfg.enable_print = false;
+  	cnfg.enable_print = 0;
 
-  	char *url = malloc((strlen(argv[2]) + strlen(URL) + 1) * sizeof(char));
+  	char *url = malloc((strlen(argv[1]) + strlen(URL) + 1) * sizeof(char));
   	strcpy(url,URL);
-  	strcat(url,argv[2]);
-  	if (argv[2][(strlen(argv[2]) - 1)] != '/') 
+  	strcat(url,argv[1]);
+  	if (argv[1][(strlen(argv[1]) - 1)] != '/') 
     		strcat(url,"/");
 
-  	int i = strtol(argv[1],NULL,10);
-  	int rgetimg = get_img(cnfg,url,i);
-  	if (rgetimg == 1) printf("Error in get source\n");
-  	else if (rgetimg == 2) printf("Invalid index\n");
+  	int i = strtol(argv[2],NULL,10);
+  	uint8_t img = get_img(cnfg,url,i);
+  	if (img == 1) printf("Error in get source\n");
+  	else if (img == 2) printf("Invalid index\n");
 
   	free(url);
   	return 0;

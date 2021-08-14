@@ -9,7 +9,7 @@ gcc -o gnu gnupluslinux-api.c web-scraping/scraping.c
 
 Run:
 
-./gnu <index> <folder>
+./gnu <folder> <index> 
 
-./gnu 10 real_life
+./gnu real_life 10
 ```
