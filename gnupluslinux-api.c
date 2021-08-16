@@ -30,8 +30,8 @@ int lines(char *str) {
 
 char *get_anime_file(char *fol, size_t i) {
 	WSCONF cnfg;
-  	cnfg.string_init = "alt=\"[IMG]\"> <a href=";
-  	cnfg.string_end = "\">";
+  	cnfg.start_block = "alt=\"[IMG]\"> <a href=";
+  	cnfg.end_block = "\">";
   	cnfg.enable_print = 0;
 
   	char *fol_url = malloc(strlen(URL) + (strlen(fol)) * sizeof(char));
