@@ -1,0 +1,42 @@
+#!/bin/bash
+
+folders="satania
+fumo
+dantheman
+booru_number_nekos
+shinobu
+energy_drink
+yuu
+eating_burgers
+chito
+anime_girls_holding_books
+cirno
+real_life
+smug
+yuru_yuri
+yuu_koito
+yagate
+christ-chan
+biting
+sad
+komi-san
+nico
+XD
+hugs
+r-tewi
+commentfaces
+videos
+lewd"
+
+for fol in ${folders}
+do
+		for ((  i=0; ; i++ ))
+		do
+			if [[ $(./gnuapi $fol $i) = '(null)' ]]; then
+				break
+			else
+				echo $(./gnuapi $fol $i)
+			fi
+		done
+done
+

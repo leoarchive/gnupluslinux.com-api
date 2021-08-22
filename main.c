@@ -19,7 +19,8 @@
 
 #include "gnupluslinux-api.h"
 
-int main(void) {
-	printf("%s", get_anime_file("real_life",1));
+int main(int argc, char *argv[]) 
+{
+	printf("%s", get_anime_file(argv[1], atoi(argv[2])));
 	return 0;
 }
