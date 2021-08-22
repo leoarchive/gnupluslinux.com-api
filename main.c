@@ -20,6 +20,6 @@
 #include "gnupluslinux-api.h"
 
 int main(void) {
-	printf("%s", get_anime_file("real_life",10));
+	printf("%s", get_anime_file("real_life",1));
 	return 0;
 }

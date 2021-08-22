@@ -18,48 +18,92 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "gnupluslinux-api.h" 
 #include "web-scraping/scraping.h"
 
-int lines(char *str) {
+uint8_t lines(char *str) 
+{
   	if (*str == '\0') return 0;
+
 	if (*str++ == '\n') return 1 + lines(str); 
+
 	return lines(str); 
 }
 
-char *get_anime_file(char *fol, size_t i) {
-	WSCONF cnfg;
-  	cnfg.start_block = "alt=\"[IMG]\"> <a href=";
-  	cnfg.end_block = "\">";
-  	cnfg.enable_print = 0;
+void set_config(WSCONF *cnfg)
+{
+  	cnfg->start_block = "alt=\"[IMG]\"> <a href=";
+  	cnfg->end_block = "\">";
+  	cnfg->enable_print = 0;
+}
 
-  	char *fol_url = malloc(strlen(URL) + (strlen(fol)) * sizeof(char));
-  	strcpy(fol_url,URL);
-  	strcat(fol_url,fol);
-  	if (fol[(strlen(fol)-1)] != '/') strcat(fol_url,"/");
+uint8_t address_bar(char c)
+{
+	return (c == '/' ? 1 : 0); 
+}
+
+char *get_anime_file(char *fol, size_t i) 
+{
+	WSCONF cnfg;
+
+	set_config(&cnfg);
+
+	uint16_t size = strlen(URL) + strlen(fol);
+
+	if (!address_bar(fol[(strlen(fol)) - 1]))
+	{
+		size++;
+	}	
+
+  	char *fol_url = malloc(size * sizeof(char));
+
+  	strcpy(fol_url, URL);
+  	strcat(fol_url, fol);
+
+	if (!address_bar(fol[(strlen(fol)) - 1]))
+	{
+		fol_url[strlen(fol_url)] = '/';
+	}	
 
   	get_file(fol_url);
 
   	char *src_str = get_source(cnfg);
   	if (!src_str) return NULL;
 
-  	int size_str = lines(src_str);
+  	uint16_t size_str = lines(src_str);
   	if (i > size_str) return NULL;
 
-  	size_t cnt = 0;
-  	while (cnt != i) if (*src_str++ == '\n') cnt++;
+	size_t cnt = 0;
+	do
+	{
+		if (*src_str++ == '\n') 
+		{
+			cnt++;
+		}
+	}
+	while (cnt != i);
+
 
   	Queue *fl_url = create_queue();
-  	while (*src_str != '\n') push_queue(fl_url,*src_str++);
 
-  	char *str = get_str(fl_url->f); 
-  	char *url = (char *) malloc((strlen(fol_url) + strlen(str)) * sizeof(char));
-  	strcat(url,fol_url);
+	do
+  	{
+		push_queue(fl_url, *src_str);
+		*src_str++;
+	} 
+	while (*src_str != '\n');
 
-  	free(fol_url);
+	push_queue(fl_url, '\n');
 
-  	strcat(url,str);
+	char *str = (char *) malloc((count_nodes(fl_url->f) + strlen(fol_url)) * sizeof(char));
 
-  	return url;
+	strcpy(str, fol_url);
+  	strcat(str, get_str(fl_url->f));
+
+	free(fol_url);
+	free(fl_url);
+	
+  	return str;
 }
