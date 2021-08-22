@@ -96,6 +96,7 @@ char *get_anime_file(char *fol, size_t i)
 	while (*src_str != '\n');
 
 	push_queue(fl_url, '\n');
+	push_queue(fl_url, '\0');
 
 	char *str = (char *) malloc((count_nodes(fl_url->f) + strlen(fol_url)) * sizeof(char));
 
