@@ -90,8 +90,7 @@ char *get_anime_file(char *fol, size_t i)
 
 	do
   	{
-		push_queue(fl_url, *src_str);
-		*src_str++;
+		push_queue(fl_url, *src_str++);
 	} 
 	while (*src_str != '\n');
 
