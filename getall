@@ -28,14 +28,16 @@ commentfaces
 videos
 lewd"
 
+
 for fol in ${folders}
 do
 		for ((  i=0; ; i++ ))
 		do
-			if [[ $(curl --silent ./gnuapi $fol $i) = '(null)' ]]; then
+			command="$(./gnuapi $fol $i)"
+			echo $command
+			$(curl $command > $fol$i.png)
+			if [[ $? != 0  ]]; then
 				break
-			else
-				echo $(./gnuapi $fol $i)
 			fi
 		done
 done
