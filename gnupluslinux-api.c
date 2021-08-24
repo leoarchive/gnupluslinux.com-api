@@ -34,9 +34,8 @@ uint8_t lines(char *str)
 
 void set_config(WSCONF *cnfg)
 {
-  	cnfg->start_block = "alt=\"[IMG]\"> <a href=";
+  	cnfg->start_block = "alt=\"[IMG]\"> <a href=\"";
   	cnfg->end_block = "\">";
-  	cnfg->enable_print = 0;
 }
 
 uint8_t address_bar(char c)
@@ -69,22 +68,24 @@ char *get_anime_file(char *fol, size_t i)
 
   	get_file(fol_url);
 
-  	char *src_str = get_source(cnfg);
-  	if (!src_str) return NULL;
+  	char *src_str = get_block(cnfg);
+  	if (!src_str) exit(EXIT_FAILURE);
 
   	uint16_t size_str = lines(src_str);
-  	if (i > size_str) return NULL;
+  	if (i > size_str) exit(EXIT_FAILURE);
 
 	size_t cnt = 0;
-	do
+	while (cnt < size_str)
 	{
-		if (*src_str++ == '\n') 
+		if (*src_str == '\n') 
 		{
 			cnt++;
 		}
+		if (cnt == i) break;
+		src_str++;
 	}
-	while (cnt != i);
 
+	if (*src_str == '\n') src_str++;
 
   	Queue *fl_url = create_queue();
 

@@ -32,7 +32,7 @@ for fol in ${folders}
 do
 		for ((  i=0; ; i++ ))
 		do
-			if [[ $(./gnuapi $fol $i) = '(null)' ]]; then
+			if [[ $(curl --silent ./gnuapi $fol $i) = '(null)' ]]; then
 				break
 			else
 				echo $(./gnuapi $fol $i)
