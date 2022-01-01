@@ -3,16 +3,13 @@ LIBS=web-scraping/scraping.c
 CC=gcc
 CFLAGS= -pedantic -Wall
 
-.PHONY: default all clone
+.PHONY: default all
 
 default: $(TARGET)
 all: default
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
-
-clone:
-	git clone https://github.com/leozamboni/web-scraping
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
