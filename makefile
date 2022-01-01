@@ -22,5 +22,4 @@ $(TARGET): $(OBJECTS)
 clean: 
 	-rm -f *.o
 	-rm -f *.tmp
-	-rm -fr web-scraping
 	-rm -f $(TARGET)
